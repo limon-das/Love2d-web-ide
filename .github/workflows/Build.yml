@@ -1,7 +1,7 @@
-name: Deploy to GitHub Pages & Cloudflare Pages
+name: Real-time Build & Deploy to GitHub Pages & Cloudflare Pages
 
 permissions:
-  contents: write
+  contents: write  # Required for gh-pages push
 
 on:
   push:
@@ -12,18 +12,15 @@ jobs:
   build-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Unzip site.zip
-        run: unzip site.zip -d site
-
-      - name: Setup Node.js
+      - name: Setup Node.js v20
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: 20
 
-      - name: Cache node modules
+      - name: Cache npm modules
         uses: actions/cache@v3
         with:
           path: ~/.npm
@@ -34,6 +31,30 @@ jobs:
       - name: Install dependencies
         run: |
           cd site
+          npm ci
+
+      - name: Build React + TS app
+        run: |
+          cd site
+          npm run build
+
+      - name: Verify build output
+        run: |
+          ls -lh site/dist
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site/dist
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          projectName: loveide
+          directory: site/dist
           npm install
 
       - name: Build project
