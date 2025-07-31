@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages & Cloudflare Pages
+name: Deploy Web ide to GitHub Pages & Cloudflare Pages
 
 on:
   push:
