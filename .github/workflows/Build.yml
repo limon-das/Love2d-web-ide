@@ -39,8 +39,7 @@ jobs:
           npm run build
 
       - name: Verify build output
-        run: |
-          ls -lh site/dist
+        run: ls -lh site/dist
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
@@ -48,46 +47,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./site/dist
 
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-          accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          projectName: loveide
-          directory: site/dist
-          npm install
-
-      - name: Build project
-        run: |
-          cd site
-          npm run build
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site/dist
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-          accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          projectName: loveide
-          directory: site/dist
-      - name: Build project
-        run: |
-          cd site
-          npm run build
-
-      # --- GitHub Pages Deployment ---
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site/dist
-
-      # --- Cloudflare Pages Deployment ---
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
